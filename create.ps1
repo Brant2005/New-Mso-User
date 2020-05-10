@@ -1,5 +1,5 @@
 [CmdletBinding()]
-Param([string]$d, [string]$u, [string]$p)
+Param([string]$a, [string]$b, [string]$c, [string]$d, [string]$u, [string]$p)
 #Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 $CommandList = (Get-Command -All)
 If (-Not("Connect-MsolService" -in $CommandList.Name)) { Echo "Installing..."; Install-Module -Scope CurrentUser -Name MSOnline -Force }
@@ -28,10 +28,16 @@ If (-Not("Connect-MsolService" -in $CommandList.Name)) { Echo "Installing..."; I
 #>
 
 #####  Admin Info  #####
-
-$AdminUser = "admin@test.com"
-$AdminPwd = "Test1234"
-
+If ([String]::IsNullOrEmpty($($a).Trim())) { 
+  Do { $AdminUser = (Read-Host "Enter Your Admin Email") } While ([String]::IsNullOrEmpty($($AdminUser).Trim()))
+} Else {
+  $AdminUser = $a
+}
+If ([String]::IsNullOrEmpty($($b).Trim())) { 
+  Do { $AdminPwd = (Read-Host "Enter Your Admin Password") } While ([String]::IsNullOrEmpty($($AdminPwd).Trim()))
+} Else {
+  $AdminPwd = $b
+}
 
 $SecureString = ConvertTo-SecureString -AsPlainText "${AdminPwd}" -Force
 $MySecureCreds = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ${AdminUser},${SecureString}
@@ -55,10 +61,16 @@ If ([String]::IsNullOrEmpty($($p).Trim())) {
 } Else {
   $Passwd = $p
 }
-# A1
-$AccResult = (New-MsolUser -DisplayName "${DisplayName}" -UserPrincipalName "${User}" -UsageLocation "HK" -LicenseAssignment "${UserORG}:STANDARDWOFFPACK_STUDENT" -Password "${Passwd}")
-# E3
-#$AccResult = (New-MsolUser -DisplayName "${DisplayName}" -UserPrincipalName "${User}" -UsageLocation "HK" -LicenseAssignment "${UserORG}:ENTERPRISEPACK" -Password "${Passwd}")
-# A1P
-#$AccResult = (New-MsolUser -DisplayName "${DisplayName}" -UserPrincipalName "${User}" -UsageLocation "HK" -LicenseAssignment "${UserORG}:STANDARDWOFFPACK_IW_STUDENT" -Password "${Passwd}")
+If ([String]::IsNullOrEmpty($($c).Trim())) { 
+  Do { $Sub = (Read-Host "Specify User Subscription") } While ([String]::IsNullOrEmpty($($Sub).Trim()))
+} Else {
+  $Sub = $c
+}
+$Subscriptions = $UserORG + ":" + $Sub
+$Rep = "," + $UserORG + ":"
+$Subscriptions = $Subscriptions -replace ",", $Rep
+
+# Global
+$AccResult = (New-MsolUser -DisplayName "${DisplayName}" -UserPrincipalName "${User}" -UsageLocation "HK" -LicenseAssignment "${Subscriptions}" -Password "${Passwd}")
+
 If ([String]::IsNullOrEmpty($AccResult)) { ECHO "Error: Operation Failed"; Exit 1; } else { ECHO "Operation Finished"; Exit 0; }

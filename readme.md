@@ -1,9 +1,9 @@
 <p align="center">
-<img src="https://img.moedog.org/images/2019/08/21/mso3651.png" alt="365 DEMO">
+<img src="https://github.com/xb2016/New-Mso-User/raw/master/demo.png" alt="365 DEMO">
 </p>
 
 <p align="center">
-<a href="https://www.fczbl.vip"><img alt="Author" src="https://img.shields.io/badge/Author-Moedog-blue.svg?style=flat-square"></a>
+<a href="https://moedog.org"><img alt="Author" src="https://img.shields.io/badge/Author-Moedog-blue.svg?style=flat-square"></a>
 <img alt="License" src="https://img.shields.io/github/license/xb2016/New-Mso-User.svg?style=flat-square"/>
 </p>
 
